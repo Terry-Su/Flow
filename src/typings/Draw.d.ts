@@ -1,0 +1,3 @@
+interface DrawType {
+  render(): void
+}

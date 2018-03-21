@@ -1,0 +1,38 @@
+{
+  "devDependencies": {
+    "ajv": "^5.5.2",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.2.3",
+    "typescript": "^2.6.2",
+    "typescript-eslint-parser": "^12.0.0"
+  },
+  "scripts": {
+    "start": "npm run server | npm run dev",
+    "dev": "webpack --watch",
+    "server": "node server.js",
+    "test": "jasmine",
+    "eslint": "eslint src/**/*",
+    "eslintFix": "eslint src/**/* --fix"
+  },
+  "name": "ts_flow",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@types/lodash": "^4.14.91",
+    "browser-sync": "^2.19.0",
+    "clean-webpack-plugin": "^0.1.17",
+    "copy-webpack-plugin": "^4.3.1",
+    "eslint": "^4.16.0",
+    "gulp-sourcemaps": "^2.6.2",
+    "gulp-tsb": "^2.0.5",
+    "jasmine": "^2.8.0",
+    "lodash": "^4.17.4",
+    "rimraf": "^2.6.2",
+    "ts-loader": "^3.2.0",
+    "webpack": "^3.10.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

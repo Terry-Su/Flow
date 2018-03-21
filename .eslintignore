@@ -1,0 +1,11 @@
+# Dependcies
+**/node_modules
+
+# Build results
+build
+
+# Lib in src
+src/lib
+
+# Template in src
+src/__template__
