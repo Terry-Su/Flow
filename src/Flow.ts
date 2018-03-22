@@ -29,4 +29,14 @@ export default class Flow {
 
     draw.render()
   }
+
+  addNode( props: NodeType ) {
+    props.flow = this
+    return this.actions.ADD_NODE( props )
+  }
+
+  addLink( props: LinkType ) {
+    props.flow = this
+    return this.actions.ADD_Link( props )
+  }
 }

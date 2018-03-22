@@ -1,11 +1,18 @@
+import Element from '../../model/Element';
+import Node from '../../model/Node';
+import Link from '../../model/Link';
 export default class FlowStore {
   draw: DrawType
 
-  linkList: any = {
-    elements: [],
+  /**
+   * Used to export and import data
+   */
+  data: any = {
+    nodes: [],
     links: []
   }
 
-  elementInstances: Element[]
- 
+  nodes: Node[] = []
+
+  links: Link[] = []
 }
