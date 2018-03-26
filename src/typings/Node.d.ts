@@ -4,4 +4,5 @@ interface NodeType {
   x: number
   y: number
   label: number
+  type?: string
 }

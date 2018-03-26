@@ -1,0 +1,1 @@
+export const RECT_NODE = "rect"

@@ -1,8 +1,10 @@
-import Element from '../../model/Element';
-import Node from '../../model/Node';
-import Link from '../../model/Link';
+import Element from "../../model/Element"
+import Node from "../../model/Node"
+import Link from "../../model/Link"
+import Draw from "../../../../Draw/src/Draw"
+
 export default class FlowStore {
-  draw: DrawType
+  draw: Draw
 
   /**
    * Used to export and import data

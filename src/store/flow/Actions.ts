@@ -1,10 +1,12 @@
 import FlowStore from "./FlowStore"
 import Getters from "./Getters"
 import generateUniqueId from "../../generateUniqueId"
-import isNotNil from "../../util/isNotNil"
 import Node from "../../model/Node"
 import Element from "../../model/Element"
 import Link from "../../model/Link"
+import { RECT_NODE } from "../contant/nodeType"
+import RectNode from "../../model/nodes/RectNode"
+import Draw from "../../../../Draw/src/Draw"
 
 export default class Actions {
   flowStore: FlowStore
@@ -16,17 +18,23 @@ export default class Actions {
     this.getters = getters
   }
 
-  UPDATE_DRAW( draw: DrawType ) {
+  UPDATE_DRAW( draw: Draw ) {
     this.flowStore.draw = draw
   }
 
   /**
    * // Node
    */
-  ADD_NODE( props: Node ) {
-    let { flow, id, label, x, y } = props
+  ADD_NODE( props: NodeType ) {
+    let { flow, id, label, x, y, type = RECT_NODE } = props
 
-    const node: Node = new Node( { flow, id, label, x, y } )
+    let node: Node
+
+    switch ( type ) {
+      case RECT_NODE:
+        node = new RectNode( { flow, id, label, x, y } )
+        break
+    }
 
     this.getters.nodes.push( node )
   }

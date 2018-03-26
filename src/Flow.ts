@@ -1,10 +1,11 @@
 import FlowStore from "./store/flow/FlowStore"
 import Getters from "./store/flow/Getters"
 import Actions from "./store/flow/Actions"
+import Draw from '../../Draw/src/Draw'
 
-import  "../../Draw/build/draw"
 
 export default class Flow {
+  draw: Draw
   flowStore: FlowStore
   getters: Getters
   actions: Actions
@@ -21,13 +22,21 @@ export default class Flow {
 
     const Draw = window[ 'Draw' ]
     const draw = new Draw( canvas )
+    this.draw = draw    
     this.actions.UPDATE_DRAW( draw )
+    
   }
 
   render() {
     const { draw } = this.getters
 
+    this.getters.elements.map( this.draw.sharedActions.renderElement )
+
     draw.render()
+
+    function renderElement( element ) {
+      element.render()
+    }
   }
 
   addNode( props: NodeType ) {

@@ -1,6 +1,6 @@
 import Element from "./Element"
-import isNotNil from "../util/isNotNil"
 import Node from "./Node"
+import isNotNil from "../../../Draw/src/util/isNotNil";
 
 export default class Link extends Element {
   isLink: boolean = true
@@ -18,15 +18,21 @@ export default class Link extends Element {
     this.target = this.getters.findNode( props.target )
     this.style = isNotNil( props.style ) ? props.style : this.style
 
-    const instance = this.getters.draw.addElement( "line", {
-      source: {
-        x: this.source.x,
-        y: this.source.y
-      },
-      target: {
-        x: this.target.x,
-        y: this.target.y
-      }
+    this.drawInstance = this.getters.draw.addElement( "line", {
+      sourceSegment: this.source.centerSegment,
+      targetSegment: this.target.centerSegment,
+      showArrow: true
     } )
+
+    this.drawInstance.dragger.interfaceDragging = this.handleDrawInstanceDragging.bind( this )
+  }
+
+  handleDrawInstanceDragging( event, dragger ) {
+    const point: Point2DInitial = this.draw.getters.getInitialPoint( event )
+    const deltaX = dragger.getDeltaXToPrevPoint( point )
+    const deltaY = dragger.getDeltaYToPrevPoint( point )
+    
+    this.draw.sharedActions.translateSegments( this.source.drawInstance.segments, deltaX, deltaY )
+    this.draw.sharedActions.translateSegments( this.target.drawInstance.segments, deltaX, deltaY )
   }
 }

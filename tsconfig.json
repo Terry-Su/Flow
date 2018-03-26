@@ -1,6 +1,7 @@
 {
 	"include": [
-		"src/**/*"
+		"src/**/*",
+		"./../Draw/src",
 	],
 	"exclude": [
 		"node_modules",
@@ -17,7 +18,8 @@
 			"es2016"
 		],
 		"typeRoots": [
-			"src/typings"
+			"./../Draw/src/typings",			
+			"src/typings",
 		]
 	}
 }
