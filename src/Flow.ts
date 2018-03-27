@@ -1,8 +1,9 @@
 import FlowStore from "./store/flow/FlowStore"
 import Getters from "./store/flow/Getters"
 import Actions from "./store/flow/Actions"
-import Draw from '../../Draw/src/Draw'
-
+import Draw from "../../Draw/src/Draw"
+import SharedActions from "./shared/sharedActions"
+import SharedGetters from "./shared/sharedGetters"
 
 export default class Flow {
   draw: Draw
@@ -10,21 +11,22 @@ export default class Flow {
   getters: Getters
   actions: Actions
 
+  sharedActions: SharedActions
+  sharedGetters: SharedGetters
+
   constructor( canvas: CanvasRenderingContext2D ) {
-    const flowStore: FlowStore = new FlowStore()
-    this.flowStore = flowStore
+    this.flowStore = new FlowStore()
 
-    const getters = new Getters( flowStore )
-    this.getters = getters
+    this.getters = new Getters( this.flowStore )
 
-    const actions = new Actions( flowStore, getters )
-    this.actions = actions
+    this.sharedGetters = new SharedGetters()
+    this.sharedActions = new SharedActions( this.flowStore, this.getters )
 
-    const Draw = window[ 'Draw' ]
-    const draw = new Draw( canvas )
-    this.draw = draw    
-    this.actions.UPDATE_DRAW( draw )
-    
+    this.actions = new Actions( this.flowStore, this.getters )
+
+    const Draw = window[ "Draw" ]
+    this.draw = new Draw( canvas )
+    this.actions.UPDATE_DRAW( this.draw )
   }
 
   render() {

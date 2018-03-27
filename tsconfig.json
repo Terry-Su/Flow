@@ -18,8 +18,8 @@
 			"es2016"
 		],
 		"typeRoots": [
-			"./../Draw/src/typings",			
-			"src/typings",
+			"src/typings",			
+			"../Draw/src/typings",			
 		]
 	}
 }

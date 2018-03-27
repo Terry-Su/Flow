@@ -1,16 +1,20 @@
 import Element from "./Element"
 import Segment from "../../../Draw/src/model/Segment"
-import isNotNil from "../../../Draw/src/util/isNotNil";
+import isNotNil from "../../../Draw/src/util/isNotNil"
+import Link from "./Link"
+import DrawText from "../../../Draw/src/model/text/DrawText"
 
 export default class Node extends Element {
   isNode: boolean = true
   label: string = "Unknown"
 
-  drawInstance: any
-
   centerSegment: any
 
   segmentsToLink: Segment[]
+
+  links: Link[] = []
+
+  drawText: DrawText
 
   constructor( props ) {
     super( props )
@@ -20,7 +24,10 @@ export default class Node extends Element {
 
     const width = 100
     const height = 80
-    this.drawInstance = this.getters.draw.addElement( "rect", {
+
+    const { draw } = this.getters
+
+    this.drawInstance = draw.addElement( "rect", {
       left     : props.x - width / 2,
       top      : props.y - height / 2,
       width    : width,
@@ -29,11 +36,17 @@ export default class Node extends Element {
       sizable  : false
     } )
 
-    this.centerSegment = this.getters.draw.addElement( "segment", {
+    this.centerSegment = draw.addElement( "segment", {
       x   : props.x,
       y   : props.y,
       path: this.drawInstance
     } )
+
+    this.drawText = draw.addElement( "text", {
+      text: this.label,
+    } )
+    this.sharedActions.translateNodeDrawTextToCenter( this )
+    
 
     this.centerSegment.dragger.interfaceDragging = this.handleCenterSegmentDragging.bind(
       this
@@ -57,12 +70,16 @@ export default class Node extends Element {
     const deltaX = dragger.getDeltaXToPrevPoint( point )
     const deltaY = dragger.getDeltaYToPrevPoint( point )
 
-    this.draw.sharedActions.translateSegment( this.centerSegment, deltaX, deltaY )
+    const { centerSegment, segmentsToLink } = this
+
     this.draw.sharedActions.translateSegments(
-      this.segmentsToLink,
+      [ centerSegment, ...segmentsToLink ],
       deltaX,
       deltaY
     )
+
+    this.sharedActions.translateNodeDrawTextToCenter( this )
+    this.sharedActions.translateLinksDrawTextsToCenter( this.links )
   }
 
   handleCenterSegmentDragging( event, dragger ) {
@@ -70,15 +87,15 @@ export default class Node extends Element {
     const deltaX = dragger.getDeltaXToPrevPoint( point )
     const deltaY = dragger.getDeltaYToPrevPoint( point )
 
+    const { segmentsToLink } = this
+
     this.draw.sharedActions.translateSegments(
-      this.drawInstance.segments,
+      [ ...this.drawInstance.segments, segmentsToLink ],
       deltaX,
       deltaY
     )
-    this.draw.sharedActions.translateSegments(
-      this.segmentsToLink,
-      deltaX,
-      deltaY
-    )
+
+    this.sharedActions.translateNodeDrawTextToCenter( this )
+    this.sharedActions.translateLinksDrawTextsToCenter( this.links )
   }
 }
