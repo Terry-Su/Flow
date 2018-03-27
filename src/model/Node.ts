@@ -90,7 +90,7 @@ export default class Node extends Element {
     const { segmentsToLink } = this
 
     this.draw.sharedActions.translateSegments(
-      [ ...this.drawInstance.segments, segmentsToLink ],
+      [ ...this.drawInstance.segments, ...segmentsToLink ],
       deltaX,
       deltaY
     )
