@@ -45,7 +45,7 @@ export default class Link extends Element {
     this.sharedActions.formatLinkPolyline( this )
 
     this.drawText = draw.addElement( "text", {
-      text: "Hello draw!",
+      text: "Text on link",
     } )
     this.sharedActions.translateLinkDrawTextToCenter( this )
     

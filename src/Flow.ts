@@ -48,7 +48,11 @@ export default class Flow {
 
   addLink( props: LinkType ) {
     props.flow = this
-    return this.actions.ADD_Link( props )
+    return this.actions.ADD_LINK( props )
+  }
+
+  addLinks( props: LinkType[] ) {
+    return this.actions.ADD_LINKS( props, this )
   }
 
   

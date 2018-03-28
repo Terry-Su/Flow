@@ -7,6 +7,7 @@ import Link from "../../model/Link"
 import { RECT_NODE } from "../contant/nodeType"
 import RectNode from "../../model/nodes/RectNode"
 import Draw from "../../../../Draw/src/Draw"
+import Flow from "../../Flow"
 
 export default class Actions {
   flowStore: FlowStore
@@ -51,7 +52,7 @@ export default class Actions {
   /**
    * // Link
    */
-  ADD_Link( props: LinkType ) {
+  ADD_LINK( props: LinkType ) {
     let { flow, source, target, style } = props
 
     const link: Link = new Link( { flow, source, target, style } )
@@ -59,5 +60,13 @@ export default class Actions {
     this.getters.links.push( link )
   }
 
-  
+  ADD_LINKS( props: LinkType[], flow: Flow ) {
+    const self = this
+    props.map( resolve )
+
+    function resolve( linkProp ) {
+      linkProp.flow = flow
+      self.ADD_LINK( linkProp )
+    }
+  }
 }

@@ -5,17 +5,25 @@ export default class SharedGetters {
    * // Link
    */
   getLinkRecommendedInnerPoints( link: Link ): Point2D[] {
+    let res: Point2D[] = []
     const { source, target } = link
 
     const { x: sx, y: sy } = source.centerSegment
     const { x: tx, y: ty } = target.centerSegment
+
+    const isNotVertical: boolean = sx !== tx
+    const isNotHorizontal: boolean = tx !== ty
 
     const point: Point2D = {
       x: tx,
       y: sy
     }
 
-    return [ point ]
+    if ( isNotVertical && isNotHorizontal ) {
+      res.push( point )
+    }
+
+    return res
   }
 
   getLinkRecommendedInnerSegments( link: Link ): Segment[] {
