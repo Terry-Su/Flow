@@ -1,3 +1,4 @@
+const formatBtn = document.getElementById( "format" )
 const flow = new Flow( document.getElementById( "canvas" ) )
 
 flow.addNode( {
@@ -16,9 +17,14 @@ flow.addNode( {
   y   : 300
 } )
 
+
 flow.addLink( {
   source: `1`,
-  target: `2`
+  target: `2`,
 } )
 
 flow.render()
+
+formatBtn.onclick = () => {
+  flow.format()
+}

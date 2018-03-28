@@ -20,7 +20,7 @@ export default class Flow {
     this.getters = new Getters( this.flowStore )
 
     this.sharedGetters = new SharedGetters()
-    this.sharedActions = new SharedActions( this.flowStore, this.getters )
+    this.sharedActions = new SharedActions( this.flowStore, this.getters, this.sharedGetters )
 
     this.actions = new Actions( this.flowStore, this.getters )
 
@@ -49,5 +49,10 @@ export default class Flow {
   addLink( props: LinkType ) {
     props.flow = this
     return this.actions.ADD_Link( props )
+  }
+
+  
+  format() {
+    this.actions.FORMAT()
   }
 }

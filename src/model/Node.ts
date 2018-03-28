@@ -8,13 +8,15 @@ export default class Node extends Element {
   isNode: boolean = true
   label: string = "Unknown"
 
-  centerSegment: any
+  centerSegment: Segment
 
   segmentsToLink: Segment[]
 
   links: Link[] = []
 
   drawText: DrawText
+
+  drawInstance: any  
 
   constructor( props ) {
     super( props )
@@ -39,7 +41,8 @@ export default class Node extends Element {
     this.centerSegment = draw.addElement( "segment", {
       x   : props.x,
       y   : props.y,
-      path: this.drawInstance
+      path: this.drawInstance,
+      show: false
     } )
 
     this.drawText = draw.addElement( "text", {
@@ -83,19 +86,19 @@ export default class Node extends Element {
   }
 
   handleCenterSegmentDragging( event, dragger ) {
-    const point: Point2DInitial = this.draw.getters.getInitialPoint( event )
-    const deltaX = dragger.getDeltaXToPrevPoint( point )
-    const deltaY = dragger.getDeltaYToPrevPoint( point )
+    // const point: Point2DInitial = this.draw.getters.getInitialPoint( event )
+    // const deltaX = dragger.getDeltaXToPrevPoint( point )
+    // const deltaY = dragger.getDeltaYToPrevPoint( point )
 
-    const { segmentsToLink } = this
+    // const { segmentsToLink } = this
 
-    this.draw.sharedActions.translateSegments(
-      [ ...this.drawInstance.segments, ...segmentsToLink ],
-      deltaX,
-      deltaY
-    )
+    // this.draw.sharedActions.translateSegments(
+    //   [ ...this.drawInstance.segments, ...segmentsToLink ],
+    //   deltaX,
+    //   deltaY
+    // )
 
-    this.sharedActions.translateNodeDrawTextToCenter( this )
-    this.sharedActions.translateLinksDrawTextsToCenter( this.links )
+    // this.sharedActions.translateNodeDrawTextToCenter( this )
+    // this.sharedActions.translateLinksDrawTextsToCenter( this.links )
   }
 }

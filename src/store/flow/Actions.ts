@@ -18,8 +18,17 @@ export default class Actions {
     this.getters = getters
   }
 
+  /**
+   * // System
+   */
   UPDATE_DRAW( draw: Draw ) {
     this.flowStore.draw = draw
+  }
+
+  FORMAT() {
+    const { links } = this.getters
+
+    links.map( link => link.formatDrawPolyline() )
   }
 
   /**
@@ -49,4 +58,6 @@ export default class Actions {
 
     this.getters.links.push( link )
   }
+
+  
 }

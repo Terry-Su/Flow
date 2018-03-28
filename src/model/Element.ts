@@ -14,7 +14,6 @@ export default class Element {
   flow: Flow
   draw: Draw
 
-  drawInstance: any
 
   constructor( props ) {
     const { flow } = props
@@ -40,6 +39,14 @@ export default class Element {
 
   get sharedActions(): SharedActions {
     return this.flow.sharedActions
+  }
+
+  get drawActions() {
+    return this.draw.actions
+  }
+
+  get drawGetters() {
+    return this.draw.getters
   }
 
   get drawSharedActions() {
