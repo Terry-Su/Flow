@@ -12,7 +12,7 @@ export default class SharedGetters {
     const { x: tx, y: ty } = target.centerSegment
 
     const isNotVertical: boolean = sx !== tx
-    const isNotHorizontal: boolean = tx !== ty
+    const isNotHorizontal: boolean = sy !== ty
 
     const point: Point2D = {
       x: tx,

@@ -1,5 +1,10 @@
-const formatBtn = document.getElementById( "format" )
 const flow = new Flow( document.getElementById( "canvas" ) )
+
+const formatBtn = document.getElementById( "format" )
+formatBtn.onclick = () => {
+  flow.format()
+}
+
 
 flow.addNode( {
   id  : `1`,
@@ -24,7 +29,3 @@ flow.addLink( {
 } )
 
 flow.render()
-
-formatBtn.onclick = () => {
-  flow.format()
-}

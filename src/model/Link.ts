@@ -46,6 +46,7 @@ export default class Link extends Element {
 
     this.drawText = draw.addElement( "text", {
       text: "Text on link",
+      show: false,
     } )
     this.sharedActions.translateLinkDrawTextToCenter( this )
     
