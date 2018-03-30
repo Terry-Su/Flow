@@ -2,15 +2,19 @@ import Element from "./Element"
 import Node from "./Node"
 import isNotNil from "../../../Draw/src/util/isNotNil"
 import DrawText from "../../../Draw/src/model/text/DrawText"
-import { STRAIGHT, ORTHOGONAL } from '../store/contant/linkMode';
-import Line from "../../../Draw/src/model/shape/Line";
-import Segment from "../../../Draw/src/model/Segment";
-import Polyline from "../../../Draw/src/model/shape/Polyline";
+import { STRAIGHT, ORTHOGONAL } from "../store/contant/linkMode"
+import Line from "../../../Draw/src/model/shape/Line"
+import Segment from "../../../Draw/src/model/Segment"
+import Polyline from "../../../Draw/src/model/shape/Polyline"
+import intersect from "../../../Draw/src/util/geometry/intersect"
+import intersectPToRectCenterAndRectBorder from "../../../Draw/src/util/geometry/intersectPToRectCenterAndRectBorder"
+import isTwoRectIntersected from "../../../Draw/src/util/geometry/isTwoRectIntersected"
+import isPointInRect from "../../../Draw/src/util/geometry/isPointInRect"
 
 export default class Link extends Element {
   isLink: boolean = true
 
-  mode: string = ORTHOGONAL
+  mode: string = STRAIGHT
 
   source: Node
   target: Node
@@ -18,10 +22,16 @@ export default class Link extends Element {
 
   drawText: DrawText
 
-  drawPolyline: Polyline  
+  drawPolyline: Polyline
 
+  startSegment: Segment
+  endSegment: Segment
+
+  /**
+   * Inner segments(not including source and target) of link
+   * All inner segments may be removed!
+   */
   innerSegments: Segment[] = []
-
 
   constructor( props ) {
     super( props )
@@ -36,20 +46,18 @@ export default class Link extends Element {
     this.sharedActions.addLinkToNode( this.source, this )
     this.sharedActions.addLinkToNode( this.target, this )
 
+    this.recreateRecommendedStartSegment()
+    this.recreateRecommendedEndSegment()
+
     this.drawPolyline = draw.addElement( "polyline", {
-      segments: [
-        this.source.centerSegment,
-        this.target.centerSegment,
-      ]
+      segments: [ this.startSegment, this.endSegment ]
     } )
-    this.sharedActions.formatLinkPolyline( this )
 
     this.drawText = draw.addElement( "text", {
       text: "Text on link",
-      show: false,
+      show: false
     } )
     this.sharedActions.translateLinkDrawTextToCenter( this )
-    
 
     this.drawPolyline.dragger.interfaceDragging = this.handleDrawInstanceDragging.bind(
       this
@@ -67,8 +75,102 @@ export default class Link extends Element {
     return res
   }
 
-  get recommendedInnerSegments(): Segment[] {
-    return[]
+  get segments(): Segment[] {
+    const res: Segment[] = [
+      this.startSegment,
+      ...this.innerSegments,
+      this.endSegment
+    ]
+    return res
+  }
+
+  recreateRecommendedStartSegment() {
+    const { source, target, draw } = this
+
+    // Remove old start segment
+    this.startSegment && this.draw.actions.REMOVE_ELEMENT( this.startSegment )
+
+    let x: number = source.centerSegment.x
+    let y: number = source.centerSegment.y
+
+    if (
+      !isPointInRect(
+        source.centerSegment.point,
+        target.centerSegment.point,
+        target.drawBounds.left,
+        target.drawBounds.top
+      )
+      &&
+      !isPointInRect(
+        target.centerSegment.point,
+        source.centerSegment.point,
+        source.drawBounds.left,
+        source.drawBounds.top
+      )
+    ) {
+      const center = source.centerSegment.point
+      const { left, top } = source.drawBounds
+      const P = target.centerSegment.point
+
+      const intersected: Point2D = intersectPToRectCenterAndRectBorder(
+        center,
+        left,
+        top,
+        P
+      )
+
+      x = intersected.x
+      y = intersected.y
+    }
+
+    const segment: Segment = draw.addElement( "segment", {
+      x,
+      y
+    } )
+
+    this.startSegment = segment
+  }
+
+  recreateRecommendedEndSegment() {
+    const { source, target, draw } = this
+
+    // Remove old start segment
+    this.endSegment && this.draw.actions.REMOVE_ELEMENT( this.endSegment )
+
+    let x: number = target.centerSegment.x
+    let y: number = target.centerSegment.y
+
+    if (
+      !isTwoRectIntersected(
+        source.centerSegment.point,
+        source.drawBounds.left,
+        source.drawBounds.top,
+        target.centerSegment.point,
+        target.drawBounds.left,
+        target.drawBounds.top
+      )
+    ) {
+      const center = target.centerSegment.point
+      const { left, top } = target.drawBounds
+      const P = source.centerSegment.point
+
+      const intersected: Point2D = intersectPToRectCenterAndRectBorder(
+        center,
+        left,
+        top,
+        P
+      )
+
+      x = intersected.x
+      y = intersected.y
+    }
+
+    const segment: Segment = draw.addElement( "segment", {
+      x,
+      y
+    } )
+
+    this.endSegment = segment
   }
 
   handleDrawInstanceDragging( event, dragger ) {
@@ -79,48 +181,22 @@ export default class Link extends Element {
     const { source, target } = this
 
     this.drawSharedActions.translateSegments(
-      [
-        ...this.source.drawInstance.segments,
-        ...this.target.drawInstance.segments,
-
-        ...this.source.segmentsToLink,
-        ...this.target.segmentsToLink
-      ],
+      [ ...source.drawInstance.segments, ...target.drawInstance.segments ],
       deltaX,
       deltaY
     )
 
-    this.sharedActions.translateLinkDrawTextToCenter( this )
-    this.sharedActions.translateNodesDrawTextsToCenter( [ source, target ] )
+    this.update()
   }
 
-  formatDrawPolyline() {
-    const self = this
-    
-    const { drawPolyline, draw, drawActions, innerSegments } = this
+  update() {
+    const { source, target, drawPolyline } = this
 
-    drawActions.REMOVE_ELEMENTS( innerSegments )
-    this.innerSegments = this.sharedGetters.getLinkRecommendedInnerSegments( this ) 
+    this.sharedActions.translateLinkDrawTextToCenter( this )
+    this.sharedActions.translateNodesDrawTextsToCenter( [ source, target ] )
 
-    const potentialAdjustedDrawPolylineSegments: Segment[] = getPotentialAdjustedDrawPolylineSegments()
-
-    drawPolyline.updateSegments( potentialAdjustedDrawPolylineSegments )
-
-    draw.render()
-
-    function getPotentialAdjustedDrawPolylineSegments(): Segment[] {
-      const { segments } = drawPolyline
-      const { length } = segments
-      const first: Segment = segments[ 0 ]
-      const last: Segment = segments[ length - 1 ]
-
-      const res: Segment[] = [
-        first,
-        ...self.innerSegments,
-        last,
-      ]
-
-      return res
-    }
+    this.recreateRecommendedStartSegment()
+    this.recreateRecommendedEndSegment()
+    drawPolyline.updateSegments( this.segments )
   }
 }

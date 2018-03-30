@@ -62,9 +62,4 @@ export default class SharedActions {
   }
 
 
-
-  formatLinkPolyline( link: Link ) {
-    link.formatDrawPolyline()
-  }
-
 }

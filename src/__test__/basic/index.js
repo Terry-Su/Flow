@@ -10,7 +10,7 @@ flow.addNode( {
   id  : `1`,
   label: `1`,
   type: "rect",
-  x   : 100,
+  x   : 500,
   y   : 100
 } )
 

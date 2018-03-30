@@ -27,9 +27,9 @@ export default class Actions {
   }
 
   FORMAT() {
-    const { links } = this.getters
+    // const { links } = this.getters
 
-    links.map( link => link.formatDrawPolyline() )
+    // links.map( link => link.formatDrawPolyline() )
   }
 
   /**

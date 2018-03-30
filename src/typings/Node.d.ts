@@ -6,3 +6,10 @@ interface NodeType {
   label: number
   type?: string
 }
+
+interface RectNodeSegmentsToLinkList {
+  top: any
+  right: any
+  left: any
+  bottom: any
+}

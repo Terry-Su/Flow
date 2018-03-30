@@ -1,26 +1,36 @@
-import Link from "../model/Link"
+import Link from '../model/Link';
 import Segment from "../../../Draw/src/model/Segment"
+import { STRAIGHT, ORTHOGONAL } from "../store/contant/linkMode"
+import Node from '../model/Node';
 export default class SharedGetters {
   /**
    * // Link
    */
+
+  
+
   getLinkRecommendedInnerPoints( link: Link ): Point2D[] {
     let res: Point2D[] = []
-    const { source, target } = link
+    const { mode, startSegment, endSegment } = link
 
-    const { x: sx, y: sy } = source.centerSegment
-    const { x: tx, y: ty } = target.centerSegment
-
-    const isNotVertical: boolean = sx !== tx
-    const isNotHorizontal: boolean = sy !== ty
-
-    const point: Point2D = {
-      x: tx,
-      y: sy
+    if ( mode === STRAIGHT ) {
     }
 
-    if ( isNotVertical && isNotHorizontal ) {
-      res.push( point )
+    if ( mode === ORTHOGONAL ) {
+      const { x: sx, y: sy } = startSegment
+      const { x: ex, y: ey } = endSegment
+
+      const isNotVertical: boolean = sx !== ex
+      const isNotHorizontal: boolean = sy !== ey
+
+      const point: Point2D = {
+        x: ex,
+        y: sy
+      }
+
+      if ( isNotVertical && isNotHorizontal ) {
+        res.push( point )
+      }
     }
 
     return res
