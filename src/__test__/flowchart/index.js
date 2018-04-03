@@ -11,8 +11,6 @@ flow.draw.getters.viewPort.zoomBy( {
 }, -0.5 )
 
 
-
-
 flow.addNode( {
   id  : `Start`,
   label: `Start`,
@@ -66,21 +64,26 @@ flow.addLinks( [
   {
     source: `Start`,
     target: `A`,
+    mode: "orthogonal"
   },{
     source: `A`,
-    target: `B`
+    target: `B`,
+    mode: "orthogonal"
   },
   {
     source: `B`,
-    target: `C`
+    target: `C`,
+    mode: "orthogonal"
   },
   {
     source: `C`,
-    target: `D`
+    target: `D`,
+    mode: "orthogonal"
   },
   {
     source: `D`,
-    target: `End`
+    target: `End`,
+    mode: "orthogonal"
   }
 ])
 

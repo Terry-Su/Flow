@@ -2,5 +2,6 @@ interface LinkType {
   flow: any
   source: string
   target: string
-  style: string
+  style?: string
+  mode?: boolean
 }

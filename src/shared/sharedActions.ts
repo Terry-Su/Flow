@@ -1,21 +1,24 @@
 import FlowStore from "../store/flow/FlowStore"
 import Getters from "../store/flow/Getters"
-import Link from '../model/Link';
-import Node from '../model/Node';
-import SharedGetters from './sharedGetters';
-import Segment from "../../../Draw/src/model/Segment";
+import Link from "../model/Link"
+import Node from "../model/Node"
+import SharedGetters from "./sharedGetters"
+import Segment from "../../../Draw/src/model/Segment"
 
 export default class SharedActions {
   flowStore: FlowStore
   getters: Getters
   sharedGetters: SharedGetters
 
-  constructor( flowStore: FlowStore, getters: Getters, sharedGetters: SharedGetters ) {
+  constructor(
+    flowStore: FlowStore,
+    getters: Getters,
+    sharedGetters: SharedGetters
+  ) {
     this.flowStore = flowStore
     this.getters = getters
     this.sharedGetters = sharedGetters
   }
-
 
   /**
    * // Node
@@ -33,33 +36,55 @@ export default class SharedActions {
       return res
     }
   }
-
-
+  translateNode( node: Node, deltaX: number, deltaY: number ) {
+    node.translate( deltaX, deltaY )
+  }
+  translateNodeDrawInstance( node, deltaX: number, deltaY: number ) {
+    node.translateDrawInstance( deltaX, deltaY )
+  }
   translateNodeDrawTextToCenter( node: Node ) {
-    const { drawText, drawSharedActions, x, y } = node
-    const { left, top, width, height } = drawText
-    drawSharedActions.translateDrawText( drawText, -left + x - width / 2 , -top + y + height / 2 + 15 )
+    node.translateDrawTextToCenter()
   }
   translateNodesDrawTextsToCenter( nodes: Node[] ) {
     nodes.map( this.translateNodeDrawTextToCenter )
   }
-  
-
 
   /**
    * // Link
    */
-  translateLinkDrawTextToCenter( link: Link ) {
-    const { drawText, drawSharedActions, center } = link
-    const { left, top, width, height } = drawText
-    const { x, y } = center
-
-    drawSharedActions.translateDrawText( drawText, -left + x - width / 2, -top + y + height / 2 + 15 )
+  recreateLinkRecommendedStartSegment( link: Link ) {
+    link.recreateRecommendedStartSegment()
   }
-  
-  translateLinksDrawTextsToCenter( links: Link[] ) {
+
+  recreateLinksRecommendedStartSegment( links: Link[] ) {
+    links.map( this.recreateLinkRecommendedStartSegment )
+  }
+
+  recreateLinkRecommendedEndSegment( link: Link ) {
+    link.recreateRecommendedEndSegment()
+  }
+
+  recreateLinksRecommendedEndSegment( links: Link[] ) {
+    links.map( this.recreateLinkRecommendedEndSegment )
+  }
+
+  recreateLinkLines( link: Link ) {
+    link.recreateLines()
+  }
+
+  recreateLinksLines( links: Link[] ) {
+    links.map( this.recreateLinkLines )
+  }
+
+  translateLinkDrawTextToCenter( link: Link ) {
+    link.translateDrawTextToCenter()
+  }
+
+  translateLinksDrawTextToCenter( links: Link[] ) {
     links.map( this.translateLinkDrawTextToCenter )
   }
 
-
+  translateLinksDrawTextsToCenter( links: Link[] ) {
+    links.map( this.translateLinkDrawTextToCenter )
+  }
 }

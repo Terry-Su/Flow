@@ -1,5 +1,5 @@
 import Node from "../Node"
-import { RECT_NODE } from "../../store/contant/nodeType"
+import { RECT_NODE } from "../../store/constant/nodeType"
 import Segment from "../../../../Draw/src/model/Segment"
 
 export default class RectNode extends Node {
