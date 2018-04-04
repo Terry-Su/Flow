@@ -74,6 +74,15 @@ export default class Node extends Element {
     return this.drawInstance.bounds
   }
 
+  get linksShouldUpdate(): Link[] {
+    const res: Link[] = this.links.filter( shouldUpdate )
+    return res
+
+    function shouldUpdate( link ) {
+      return ! link.isManual
+    }
+  }
+
   translate( deltaX: number, deltaY: number ) {
     const { centerSegment } = this
 
@@ -102,10 +111,12 @@ export default class Node extends Element {
 
     this.translate( deltaX, deltaY )
 
-    this.sharedActions.translateLinksDrawTextToCenter( this.links )
-    this.sharedActions.recreateLinksRecommendedStartSegment( this.links )
-    this.sharedActions.recreateLinksRecommendedEndSegment( this.links )
-    this.sharedActions.recreateLinksLines( this.links )
+
+    // this.sharedActions.translateLinksDrawTextToCenter( this.linksShouldUpdate )
+
+    this.sharedActions.recreateLinksRecommendedStartSegment( this.linksShouldUpdate )
+    this.sharedActions.recreateLinksRecommendedEndSegment( this.linksShouldUpdate )
+    this.sharedActions.recreateLinksRecommendedLines( this.linksShouldUpdate )
   }
 
   handleCenterSegmentDragging( event, dragger ) {

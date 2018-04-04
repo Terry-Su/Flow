@@ -68,12 +68,12 @@ export default class SharedActions {
     links.map( this.recreateLinkRecommendedEndSegment )
   }
 
-  recreateLinkLines( link: Link ) {
-    link.recreateLines()
+  recreateLinkRecommendedLines( link: Link ) {
+    link.recreateRecommendedLines()
   }
 
-  recreateLinksLines( links: Link[] ) {
-    links.map( this.recreateLinkLines )
+  recreateLinksRecommendedLines( links: Link[] ) {
+    links.map( this.recreateLinkRecommendedLines )
   }
 
   translateLinkDrawTextToCenter( link: Link ) {
