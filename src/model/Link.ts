@@ -11,6 +11,8 @@ import isTwoRectIntersected from "../../../Draw/src/util/geometry/isTwoRectInter
 import isPointInRect from "../../../Draw/src/util/geometry/isPointInRect"
 import Path from "../../../Draw/src/model/Path"
 import MathVector from "../../../Draw/src/util/math/MathVector"
+import FlowchartConnector from "./tool/FlowchartConnector"
+import { isFirst, isLast } from "../../../Draw/src/util/array"
 
 export default class Link extends Element {
   isLink: boolean = true
@@ -494,8 +496,6 @@ export default class Link extends Element {
         const manualRecommendedOrthogonalLines = this.getManualRecommendedOrthogonalLines()
         lines = [ ...manualRecommendedOrthogonalLines ]
       }
-
-      
     }
 
     this.recreateLines( lines )
@@ -631,38 +631,91 @@ export default class Link extends Element {
     const { x: sx, y: sy }: Segment = startSegment
     const { x: ex, y: ey }: Segment = endSegment
     let lines: Line[] = []
+    let lineSegments = []
 
-    if ( B.left > A.right ) {
-      if ( B.bottom < A.top ) {
-        let line1: Line
-        let line2: Line
+    const flowChrtConnector = new FlowchartConnector( {
+      sourcePoint : startSegment.point,
+      sourceCenter: source.centerSegment.point,
+      sourceWidth : source.drawInstance.boundsExtra.width,
+      sourceHeight: source.drawInstance.boundsExtra.height,
 
-        const linesSegment: Segment = draw.addElement( "segment", {
-          x        : endSegment.x,
-          y        : startSegment.y,
+      targetPoint : endSegment.point,
+      targetCenter: target.centerSegment.point,
+      targetWidth : target.drawInstance.boundsExtra.width,
+      targetHeight: target.drawInstance.boundsExtra.height
+    } )
+
+    const linesTwoPoints: LineTwoPoints[] = flowChrtConnector.linesTwoPoints
+
+    linesTwoPoints.map( resolveLinesSegments )
+    
+    this.recreateLinesSegments( lineSegments )
+    
+    lineSegments.map( resolveLines )
+
+    return lines
+
+    function resolveLinesSegments(
+      lineTwoPoints: LineTwoPoints,
+      index: number,
+      { length }
+    ) {
+      const second: Point2D = lineTwoPoints[ 1 ]
+
+      if ( !isLast( index, length ) ) {
+        const segment = draw.addElement( "segment", {
+          x        : second.x,
+          y        : second.y,
           draggable: false
         } )
 
-        this.recreateLinesSegments( [ linesSegment ] )
+        lineSegments.push( segment )
+      }
+    }
 
-        line1 = draw.addElement( "line", {
-          sourceSegment: startSegment,
-          targetSegment: linesSegment,
+    function resolveLines(
+      segment: Segment,
+      index: number,
+      segments: Segment[]
+    ) {
+      let segmentA: Segment
+      let segmentB: Segment
+
+      if ( isFirst( index ) ) {
+        segmentA = startSegment
+      }
+
+      if ( ! isFirst( index ) && ! isLast( index, length ) ) {
+        segmentA = segments[ index - 1 ]
+        segmentB = segments[ index ]
+      }
+
+      const line: Line = draw.addElement( "line", {
+        sourceSegment: segmentA,
+        targetSegment: segmentB,
+        showArrow    : false,
+        draggable    : false
+      } )
+
+      lines.push( line )
+
+      // Create last line when index is last
+      if ( isLast( index, length ) ) {
+        const segmentC: Segment = segments[ index ]
+        const segmentD: Segment = endSegment
+
+        const line: Line = draw.addElement( "line", {
+          sourceSegment: segmentC,
+          targetSegment: segmentD,
           showArrow    : false,
           draggable    : false
         } )
-        line2 = draw.addElement( "line", {
-          sourceSegment: linesSegment,
-          targetSegment: endSegment,
-          draggable    : false
-        } )
-
-        lines = [ line1, line2 ]
+  
+        lines.push( line )
       }
-    } 
 
-
-    return lines
+      return lines
+    }
   }
 
   bindLinesDrag() {
