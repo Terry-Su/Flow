@@ -19,7 +19,7 @@ flow.addNode( {
   label: `2`,
   type: "rect",
   x   : 500,
-  y   : 180
+  y   : 260
 } )
 
 

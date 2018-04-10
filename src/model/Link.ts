@@ -247,6 +247,11 @@ export default class Link extends Element {
           x = A.left
         }
       }
+
+      /**
+       * Temporary codes for development
+       */
+      x = A.left
     }
 
     const segment: Segment = draw.addElement( "segment", {
@@ -379,6 +384,11 @@ export default class Link extends Element {
           x = B.right
         }
       }
+
+      /**
+       * Temporary codes for development
+       */
+      x = B.right
     }
 
     const segment: Segment = draw.addElement( "segment", {
@@ -642,7 +652,8 @@ export default class Link extends Element {
       targetPoint : endSegment.point,
       targetCenter: target.centerSegment.point,
       targetWidth : target.drawInstance.boundsExtra.width,
-      targetHeight: target.drawInstance.boundsExtra.height
+      targetHeight: target.drawInstance.boundsExtra.height,
+      draw: this.draw
     } )
 
     const linesTwoPoints: LineTwoPoints[] = flowChrtConnector.linesTwoPoints
@@ -651,7 +662,7 @@ export default class Link extends Element {
     
     this.recreateLinesSegments( lineSegments )
     
-    lineSegments.map( resolveLines )
+    this.segments.map( resolveLines )
 
     return lines
 
@@ -662,7 +673,7 @@ export default class Link extends Element {
     ) {
       const second: Point2D = lineTwoPoints[ 1 ]
 
-      if ( !isLast( index, length ) ) {
+      if ( ! isLast( index, length ) ) {
         const segment = draw.addElement( "segment", {
           x        : second.x,
           y        : second.y,
@@ -678,43 +689,21 @@ export default class Link extends Element {
       index: number,
       segments: Segment[]
     ) {
-      let segmentA: Segment
-      let segmentB: Segment
+      const { length }: Segment[] = segments
 
-      if ( isFirst( index ) ) {
-        segmentA = startSegment
-      }
-
-      if ( ! isFirst( index ) && ! isLast( index, length ) ) {
-        segmentA = segments[ index - 1 ]
-        segmentB = segments[ index ]
-      }
-
-      const line: Line = draw.addElement( "line", {
-        sourceSegment: segmentA,
-        targetSegment: segmentB,
-        showArrow    : false,
-        draggable    : false
-      } )
-
-      lines.push( line )
-
-      // Create last line when index is last
-      if ( isLast( index, length ) ) {
-        const segmentC: Segment = segments[ index ]
-        const segmentD: Segment = endSegment
+      if ( length > 2 && ! isFirst( index ) ) {
+        const segmentA = segments[ index - 1 ]
+        const segmentB = segments[ index]
 
         const line: Line = draw.addElement( "line", {
-          sourceSegment: segmentC,
-          targetSegment: segmentD,
+          sourceSegment: segmentA,
+          targetSegment: segmentB,
           showArrow    : false,
           draggable    : false
         } )
   
         lines.push( line )
       }
-
-      return lines
     }
   }
 
