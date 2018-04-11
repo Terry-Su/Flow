@@ -168,11 +168,14 @@ export default class Link extends Element {
 
   recreateStartSegment( segment: Segment ) {
     // Remove old start segment
+    this.startSegment && this.sharedActions.removeNodeLinkSegment( this.source, this.startSegment )    
     this.startSegment && this.draw.actions.REMOVE_ELEMENT( this.startSegment )
 
     this.startSegment = segment
 
     this.bindStartSegemntDrag()
+
+    this.sharedActions.addNodeLinkSegment( this.source, this.startSegment )
   }
 
   recreateRecommendedStartSegment() {
@@ -248,10 +251,10 @@ export default class Link extends Element {
         }
       }
 
-      /**
-       * Temporary codes for development
-       */
-      x = A.left
+      // /**
+      //  * Temporary codes for development
+      //  */
+      // x = A.left
     }
 
     const segment: Segment = draw.addElement( "segment", {
@@ -320,11 +323,14 @@ export default class Link extends Element {
 
   recreateEndSegment( segment: Segment ) {
     // Remove old end segment
+    this.endSegment && this.sharedActions.removeNodeLinkSegment( this.target, this.endSegment )    
     this.endSegment && this.draw.actions.REMOVE_ELEMENT( this.endSegment )
 
     this.endSegment = segment
 
     this.bindEndSegemntDrag()
+
+    this.sharedActions.addNodeLinkSegment( this.target, this.endSegment )
   }
 
   recreateRecommendedEndSegment() {
@@ -385,10 +391,10 @@ export default class Link extends Element {
         }
       }
 
-      /**
-       * Temporary codes for development
-       */
-      x = B.right
+      // /**
+      //  * Temporary codes for development
+      //  */
+      // x = B.right
     }
 
     const segment: Segment = draw.addElement( "segment", {
@@ -471,20 +477,17 @@ export default class Link extends Element {
 
   recreateLines( lines: Line[] ) {
     // Remove old lines
-    this.lines && this.draw.actions.REMOVE_ELEMENTS( this.lines )
+    this.draw.actions.REMOVE_ELEMENTS( this.lines )
 
     this.lines = lines
 
-    this.bindLinesDrag()
+    // this.bindLinesDrag()
   }
 
   recreateRecommendedLines() {
     const { mode, draw, startSegment, endSegment, isManual } = this
     let lines: Line[] = []
-
-    // Remove old lines
-    this.draw.actions.REMOVE_ELEMENTS( this.linesSegments )
-    this.draw.actions.REMOVE_ELEMENTS( this.lines )
+    
 
     if ( mode === STRAIGHT ) {
       const line = draw.addElement( "line", {
@@ -691,7 +694,7 @@ export default class Link extends Element {
     ) {
       const { length }: Segment[] = segments
 
-      if ( length > 2 && ! isFirst( index ) ) {
+      if ( length >= 2 && ! isFirst( index ) ) {
         const segmentA = segments[ index - 1 ]
         const segmentB = segments[ index]
 

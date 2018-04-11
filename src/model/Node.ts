@@ -17,6 +17,8 @@ export default class Node extends Element {
 
   links: Link[] = []
 
+  linkSegments: Segment[] = []
+
   drawText: DrawText
 
   drawInstance: Path
@@ -62,6 +64,10 @@ export default class Node extends Element {
     )
   }
 
+  // ======================
+  // Getters
+  // ======================
+
   get x(): number {
     return this.centerSegment.x
   }
@@ -74,15 +80,50 @@ export default class Node extends Element {
     return this.drawInstance.bounds
   }
 
-  get linksShouldUpdate(): Link[] {
+  get manualLinks(): Link[] {
     const res: Link[] = this.links.filter( shouldUpdate )
     return res
 
     function shouldUpdate( link ) {
-      return ! link.isManual
+      return link.isManual
     }
   }
 
+  // ======================
+  // Actions
+  // ======================
+  /**
+   * // Link segments
+   */
+  addLinkSegment( segment: Segment ) {
+    this.linkSegments.push( segment )
+  }
+
+  removeLinkSegment( segment: Segment ) {
+    const { linkSegments } = this
+
+    const segmentIndex: number = getIndex( linkSegments, segment )
+
+		if ( isNotNil( segmentIndex )) {
+			this.linkSegments.splice( segmentIndex, 1 )
+    }
+    
+		function getIndex( linkSegments, segment ) {
+			let res = null
+			linkSegments.map( resolve )
+			return res
+
+			function resolve( theSegment, index ) {
+				if ( theSegment === segment ) {
+					res = index
+				}
+			}
+		}
+  }
+
+  /**
+   * // Translation
+   */
   translate( deltaX: number, deltaY: number ) {
     const { centerSegment } = this
 
@@ -92,6 +133,10 @@ export default class Node extends Element {
 
   translateDrawInstance( deltaX: number, deltaY: number ) {
     this.draw.sharedActions.translateSegments( this.drawInstance.segments, deltaX, deltaY )
+  }
+
+  translateLinkSegments( deltaX: number, deltaY: number ) {
+    this.drawSharedActions.translateSegments( this.linkSegments, deltaX, deltaY )
   }
 
   translateDrawTextToCenter(  ) {
@@ -111,12 +156,16 @@ export default class Node extends Element {
 
     this.translate( deltaX, deltaY )
 
+    this.translateLinkSegments( deltaX, deltaY )
 
-    // this.sharedActions.translateLinksDrawTextToCenter( this.linksShouldUpdate )
+    this.sharedActions.recreateLinksRecommendedLines( this.manualLinks )
+    
+    // this.sharedActions.translateLinksDrawTextToCenter( this.manualLinks )
 
-    this.sharedActions.recreateLinksRecommendedStartSegment( this.linksShouldUpdate )
-    this.sharedActions.recreateLinksRecommendedEndSegment( this.linksShouldUpdate )
-    this.sharedActions.recreateLinksRecommendedLines( this.linksShouldUpdate )
+    // this.sharedActions.recreateLinksRecommendedStartSegment( this.manualLinks )
+    // this.sharedActions.recreateLinksRecommendedEndSegment( this.manualLinks )
+    // this.sharedActions.recreateLinksRecommendedLines( this.manualLinks )
+
   }
 
   handleCenterSegmentDragging( event, dragger ) {

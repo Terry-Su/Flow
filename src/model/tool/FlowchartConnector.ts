@@ -3,7 +3,8 @@ import { isFirst, isLast } from "../../../../Draw/src/util/array"
 import removeExtraPointsOnSameSegmentLine from "../../../../Draw/src/util/geometry/removeExtraPointsOnSameSegmentLine"
 import isPointOnSegmemtLine from "../../../../Draw/src/util/geometry/isPointOnSegmemtLine"
 import MathVector from "../../../../Draw/src/util/math/MathVector"
-import Draw from "../../../../Draw/src/Draw";
+import Draw from "../../../../Draw/src/Draw"
+import isPointEqual from "../../../../Draw/src/util/geometry/isPointEqual";
 
 interface Props {
   sourcePoint: Point2D
@@ -502,19 +503,73 @@ export default class FlowchartConnector {
       ( this.notIntersectOneSourceBorder( verticalDectectingSourceLine ) ||
         this.notIntersectOneTargetBorder( verticalDectectingTargetLine ) )
     ) {
+
       const sourceExtensionCorner = this.getSourceExtensionCorner(
         this.currentSourceExtension
       )
       const targetExtensionCorner = this.getTargetExtensionCorner(
-        sourceExtensionCorner,
-        this.currentTargetExtension
+        this.currentSourceExtension
       )
 
+      let newSourceExtension: Point2D
+      let newTargetExtension: Point2D
+
+      const { sourceLeftExtension, sourceTopExtension, sourceRightExtension, sourceBottomExtension, totalExtensionLeft,
+        totalExtensionTop, totalExtensionRight, totalExtensionBottom} = this
+
+    if( isPointEqual( currentSourceExtension,  sourceLeftExtension ) ) {
+      newSourceExtension = {
+        x: totalExtensionLeft,
+        y: currentSourceExtension.y
+      }
+
+      newTargetExtension = {
+        x: totalExtensionRight,
+        y: currentTargetExtension.y
+      }
+    }
+
+    if( isPointEqual( currentSourceExtension,  sourceTopExtension ) ) {
+      newSourceExtension = {
+        x: currentSourceExtension.x,
+        y: totalExtensionTop
+      }
+
+      newTargetExtension = {
+        x: currentTargetExtension.x,
+        y: totalExtensionBottom
+      }
+    }
+
+    if( isPointEqual( currentSourceExtension,  sourceRightExtension ) ) {
+      newSourceExtension = {
+        x: totalExtensionRight,
+        y: currentSourceExtension.y
+      }
+
+      newTargetExtension = {
+        x: totalExtensionLeft,
+        y: currentTargetExtension.y
+      }
+    }
+
+    if( isPointEqual( currentSourceExtension,  sourceBottomExtension ) ) {
+      newSourceExtension = {
+        x: currentSourceExtension.x,
+        y: totalExtensionBottom
+      }
+
+      newTargetExtension = {
+        x: currentTargetExtension.x,
+        y: totalExtensionTop
+      }
+    }
+
       points = [
-        currentSourceExtension,
+        newSourceExtension,
         sourceExtensionCorner,
         targetExtensionCorner,
-        currentTargetExtension
+        newTargetExtension
       ]
     }
 
@@ -591,14 +646,37 @@ export default class FlowchartConnector {
 
   getSourceExtensionCorner( sourceExtension: Point2D ) {
     let res: Point2D = null
-    this.totalExtensionSegmentLines.map( resolve )
+    
+    const { sourceLeftExtension, sourceTopExtension, sourceRightExtension, sourceBottomExtension } = this
+
+    if( isPointEqual( sourceExtension,  sourceLeftExtension ) ) {
+      res = this.totalExtensionLeftTop
+    }
+
+    if( isPointEqual( sourceExtension,  sourceTopExtension ) ) {
+      res = this.totalExtensionRightTop
+    }
+
+    if( isPointEqual( sourceExtension,  sourceRightExtension ) ) {
+      res = this.totalExtensionRightBottom
+    }
+
+    if( isPointEqual( sourceExtension,  sourceBottomExtension ) ) {
+      res = this.totalExtensionLeftBottom
+    }
+
     return res
 
-    function resolve( segmentLine: LineTwoPoints ) {
-      if ( isPointOnSegmemtLine( sourceExtension, segmentLine ) ) {
-        res = segmentLine[ 0 ]
-      }
-    }
+    // function resolve( segmentLine: LineTwoPoints, index: number, array ) {
+    //   if ( isPointOnSegmemtLine( sourceExtension, segmentLine ) ) {
+    //     res = segmentLine[ 0 ]
+    //   }
+
+    //   if ( isLast( index, array.length ) && res === null ) {
+    //     console.log( array )
+    //     debugger
+    //   }
+    // }
   }
 
   /**
@@ -645,27 +723,47 @@ export default class FlowchartConnector {
   }
 
   getTargetExtensionCorner(
-    sourceExtensionCorner: Point2D,
-    targetExtension: Point2D
+    sourceExtension: Point2D
   ) {
     let res: Point2D = null
-    this.totalExtensionSegmentLines.map( resolve )
+
+    const { sourceLeftExtension, sourceTopExtension, sourceRightExtension, sourceBottomExtension } = this
+    
+    // this.totalExtensionSegmentLines.map( resolve )
+    
+    if( isPointEqual( sourceExtension,  sourceBottomExtension ) ) {
+      res = this.totalExtensionLeftTop
+    }
+
+    if( isPointEqual( sourceExtension,  sourceLeftExtension ) ) {
+      res = this.totalExtensionRightTop
+    }
+
+    if( isPointEqual( sourceExtension,  sourceTopExtension ) ) {
+      res = this.totalExtensionRightBottom
+    }
+
+    if( isPointEqual( sourceExtension,  sourceRightExtension ) ) {
+      res = this.totalExtensionLeftBottom
+    }
+
+
     return res
 
-    function resolve( segmentLine: LineTwoPoints ) {
-      if ( isPointOnSegmemtLine( targetExtension, segmentLine ) ) {
-        const potentials: Point2D[] = segmentLine
-        potentials.map( getRes )
-      }
-    }
+    // function resolve( segmentLine: LineTwoPoints ) {
+    //   if ( isPointOnSegmemtLine( targetExtension, segmentLine ) ) {
+    //     const potentials: Point2D[] = segmentLine
+    //     potentials.map( getRes )
+    //   }
+    // }
 
-    function getRes( potential: Point2D ) {
-      const L: MathVector = new MathVector( potential, sourceExtensionCorner )
-      const { angle } = L
-      if ( angle === 0 || angle === 90 || angle === 180 || angle === 270 ) {
-        res = potential
-      }
-    }
+    // function getRes( potential: Point2D ) {
+    //   const L: MathVector = new MathVector( potential, sourceExtensionCorner )
+    //   const { angle } = L
+    //   if ( angle === 0 || angle === 90 || angle === 180 || angle === 270 ) {
+    //     res = potential
+    //   }
+    // }
   }
   // ======================
   // Actions

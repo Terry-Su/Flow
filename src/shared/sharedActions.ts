@@ -36,6 +36,19 @@ export default class SharedActions {
       return res
     }
   }
+  
+  /**
+   * // // Link segments
+   */
+  addNodeLinkSegment( node: Node, segment: Segment ) {
+    node.addLinkSegment( segment )
+  }
+  removeNodeLinkSegment( node: Node, segment: Segment ) {
+    node.removeLinkSegment( segment )
+  }
+  /**
+   * // // Translation
+   */
   translateNode( node: Node, deltaX: number, deltaY: number ) {
     node.translate( deltaX, deltaY )
   }
