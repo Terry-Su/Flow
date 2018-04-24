@@ -7,6 +7,8 @@ import RectNode from "../../model/nodes/RectNode"
 import Draw from "../../../../Draw/src/Draw"
 import Segment from "../../../../Draw/src/model/Segment"
 import isNotNil from "../../../../Draw/src/util/isNotNil"
+import OrthogonalLink from '../../util/OrthogonalLink/OrthogonalLink';
+import OrthogonalLinkRect from '../../util/OrthogonalLink/OrthogonalLinkRect';
 
 export default class Getters {
   flowStore: FlowStore
@@ -29,6 +31,13 @@ export default class Getters {
 
   get elements(): Element[] {
     return [ ...this.nodes, ...this.links ]
+  }
+
+  get test(): any {
+    return {
+      OrthogonalLink,
+      OrthogonalLinkRect,
+    }
   }
 
   findNode( id: string ) {

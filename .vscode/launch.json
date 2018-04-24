@@ -9,8 +9,9 @@
 			"request": "launch",
 			"name": "Launch Chrome ",
 			"port": 9222,
-			"url": "http://localhost:8900/build/__test__/basic/index.html",
+			// "url": "http://localhost:8900/build/__test__/basic/index.html",
 			// "url": "http://localhost:8900/build/__test__/flowchart/index.html",
+			"url": "http://localhost:8900/build/__test__/flowchartLinesSituations/index.html",
 			"pathMapping": {
 				"/": "${workspaceFolder}"
 			},

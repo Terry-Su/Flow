@@ -47,6 +47,7 @@ export default class Actions {
     }
 
     this.getters.nodes.push( node )
+    return node
   }
 
   /**
@@ -58,6 +59,8 @@ export default class Actions {
     const link: Link = new Link( props )
 
     this.getters.links.push( link )
+
+    return link
   }
 
   ADD_LINKS( props: LinkType[], flow: Flow ) {

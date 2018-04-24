@@ -646,7 +646,7 @@ export default class Link extends Element {
     let lines: Line[] = []
     let lineSegments = []
 
-    const flowChrtConnector = new FlowchartConnector( {
+    const flowChartConnector = new FlowchartConnector( {
       sourcePoint : startSegment.point,
       sourceCenter: source.centerSegment.point,
       sourceWidth : source.drawInstance.boundsExtra.width,
@@ -659,7 +659,7 @@ export default class Link extends Element {
       draw: this.draw
     } )
 
-    const linesTwoPoints: LineTwoPoints[] = flowChrtConnector.linesTwoPoints
+    const linesTwoPoints: LineTwoPoints[] = flowChartConnector.linesTwoPoints
 
     linesTwoPoints.map( resolveLinesSegments )
     

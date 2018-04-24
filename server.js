@@ -12,7 +12,7 @@ const serverconfig = {
 		`${serverPath}/build/**`
 	],
 	port: 8900,
-	open: false,
+	open: true,
 }
 
 

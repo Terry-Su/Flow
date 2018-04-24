@@ -410,194 +410,197 @@ export default class FlowchartConnector {
    * // LinesTwoPoints
    */
   get linesTwoPoints(): LineTwoPoints[] {
-    let points: Point2D[] = []
-
-    let potential1: Point2D
-    let potential2: Point2D
-    let potential3: Point2D
-    let potential4: Point2D
-    let potential5: Point2D
-
-    /**
-     * Direction is to source point
-     */
-    let potentialHorizon: Point2D
-
-    /**
-     * Direction is to source point
-     */
-    let potentialVertical: Point2D
-
-    let proper1: Point2D
-    let proper2: Point2D
-    let proper3: Point2D
-    let proper4: Point2D
-    let proper5: Point2D
-
-    /**
-     * Temporary horizontal and vertical detecting lines of source that are used to
-     * determine next step
-     */
-    let horizontalDectectingSourceLine: LineTwoPoints
-    let verticalDectectingSourceLine: LineTwoPoints
-    /**
-     * Temporary horizontal and vertical detecting lines of target that are used to
-     * determine next step
-     */
-    let horizontalDectectingTargetLine: LineTwoPoints
-    let verticalDectectingTargetLine: LineTwoPoints
-
-    /**
-     * Temporary times that is used to
-     * determine next step
-     */
-    let times: number
-
-    const {
-      sourcePoint,
-      targetPoint,
-      currentSourceExtension,
-      currentTargetExtension
-    } = this
-    const { x: sx, y: sy } = sourcePoint
-    const { x: tx, y: ty } = targetPoint
-
-    // Draw horizontal line
-    potentialHorizon = {
-      x: currentTargetExtension.x,
-      y: currentSourceExtension.y
-    }
-
-    potentialVertical = {
-      x: currentSourceExtension.x,
-      y: currentTargetExtension.y
-    }
-
-    horizontalDectectingSourceLine = [ sourcePoint, potentialHorizon ]
-    verticalDectectingSourceLine = [ sourcePoint, potentialVertical ]
-
-    horizontalDectectingTargetLine = [ potentialHorizon, targetPoint ]
-    verticalDectectingTargetLine = [ potentialVertical, targetPoint ]
-
-    if (
-      this.isIntersectOneSourceBorder( horizontalDectectingSourceLine ) &&
-      this.isIntersectOneTargetBorder( horizontalDectectingTargetLine )
-    ) {
-      points = [
-        currentSourceExtension,
-        potentialHorizon,
-        currentTargetExtension
-      ]
-    } else if (
-      this.isIntersectOneSourceBorder( verticalDectectingSourceLine ) &&
-      this.isIntersectOneTargetBorder( verticalDectectingTargetLine )
-    ) {
-      points = [
-        currentSourceExtension,
-        potentialVertical,
-        currentTargetExtension
-      ]
-    } else if (
-      ( this.notIntersectOneSourceBorder( horizontalDectectingSourceLine ) ||
-        this.notIntersectOneTargetBorder( horizontalDectectingTargetLine ) ) &&
-      ( this.notIntersectOneSourceBorder( verticalDectectingSourceLine ) ||
-        this.notIntersectOneTargetBorder( verticalDectectingTargetLine ) )
-    ) {
-
-      const sourceExtensionCorner = this.getSourceExtensionCorner(
-        this.currentSourceExtension
-      )
-      const targetExtensionCorner = this.getTargetExtensionCorner(
-        this.currentSourceExtension
-      )
-
-      let newSourceExtension: Point2D
-      let newTargetExtension: Point2D
-
-      const { sourceLeftExtension, sourceTopExtension, sourceRightExtension, sourceBottomExtension, totalExtensionLeft,
-        totalExtensionTop, totalExtensionRight, totalExtensionBottom} = this
-
-    if( isPointEqual( currentSourceExtension,  sourceLeftExtension ) ) {
-      newSourceExtension = {
-        x: totalExtensionLeft,
-        y: currentSourceExtension.y
-      }
-
-      newTargetExtension = {
-        x: totalExtensionRight,
-        y: currentTargetExtension.y
-      }
-    }
-
-    if( isPointEqual( currentSourceExtension,  sourceTopExtension ) ) {
-      newSourceExtension = {
-        x: currentSourceExtension.x,
-        y: totalExtensionTop
-      }
-
-      newTargetExtension = {
-        x: currentTargetExtension.x,
-        y: totalExtensionBottom
-      }
-    }
-
-    if( isPointEqual( currentSourceExtension,  sourceRightExtension ) ) {
-      newSourceExtension = {
-        x: totalExtensionRight,
-        y: currentSourceExtension.y
-      }
-
-      newTargetExtension = {
-        x: totalExtensionLeft,
-        y: currentTargetExtension.y
-      }
-    }
-
-    if( isPointEqual( currentSourceExtension,  sourceBottomExtension ) ) {
-      newSourceExtension = {
-        x: currentSourceExtension.x,
-        y: totalExtensionBottom
-      }
-
-      newTargetExtension = {
-        x: currentTargetExtension.x,
-        y: totalExtensionTop
-      }
-    }
-
-      points = [
-        newSourceExtension,
-        sourceExtensionCorner,
-        targetExtensionCorner,
-        newTargetExtension
-      ]
-    }
-
-    points = removeExtraPointsOnSameSegmentLine( [
-      sourcePoint,
-      ...points,
-      targetPoint
-    ] )
-
-    const res: LineTwoPoints[] = composeLineTwoPoints( points )
-
-    return res
-
-    function composeLineTwoPoints( points: Point2D[] ) {
-      let res: LineTwoPoints[] = []
-      points.map( compose )
-      return res
-
-      function compose( point: Point2D, index: number, points: Point2D[] ) {
-        const { length }: Point2D[] = points
-
-        if ( !isFirst( index ) ) {
-          const prev: Point2D = points[ index - 1 ]
-          res.push( [ prev, point ] )
-        }
-      }
-    }
+    return []
   }
+  // get linesTwoPoints(): LineTwoPoints[] {
+  //   let points: Point2D[] = []
+
+  //   let potential1: Point2D
+  //   let potential2: Point2D
+  //   let potential3: Point2D
+  //   let potential4: Point2D
+  //   let potential5: Point2D
+
+  //   /**
+  //    * Direction is to source point
+  //    */
+  //   let potentialHorizon: Point2D
+
+  //   /**
+  //    * Direction is to source point
+  //    */
+  //   let potentialVertical: Point2D
+
+  //   let proper1: Point2D
+  //   let proper2: Point2D
+  //   let proper3: Point2D
+  //   let proper4: Point2D
+  //   let proper5: Point2D
+
+  //   /**
+  //    * Temporary horizontal and vertical detecting lines of source that are used to
+  //    * determine next step
+  //    */
+  //   let horizontalDectectingSourceLine: LineTwoPoints
+  //   let verticalDectectingSourceLine: LineTwoPoints
+  //   /**
+  //    * Temporary horizontal and vertical detecting lines of target that are used to
+  //    * determine next step
+  //    */
+  //   let horizontalDectectingTargetLine: LineTwoPoints
+  //   let verticalDectectingTargetLine: LineTwoPoints
+
+  //   /**
+  //    * Temporary times that is used to
+  //    * determine next step
+  //    */
+  //   let times: number
+
+  //   const {
+  //     sourcePoint,
+  //     targetPoint,
+  //     currentSourceExtension,
+  //     currentTargetExtension
+  //   } = this
+  //   const { x: sx, y: sy } = sourcePoint
+  //   const { x: tx, y: ty } = targetPoint
+
+  //   // Draw horizontal line
+  //   potentialHorizon = {
+  //     x: currentTargetExtension.x,
+  //     y: currentSourceExtension.y
+  //   }
+
+  //   potentialVertical = {
+  //     x: currentSourceExtension.x,
+  //     y: currentTargetExtension.y
+  //   }
+
+  //   horizontalDectectingSourceLine = [ sourcePoint, potentialHorizon ]
+  //   verticalDectectingSourceLine = [ sourcePoint, potentialVertical ]
+
+  //   horizontalDectectingTargetLine = [ potentialHorizon, targetPoint ]
+  //   verticalDectectingTargetLine = [ potentialVertical, targetPoint ]
+
+  //   if (
+  //     this.isIntersectOneSourceBorder( horizontalDectectingSourceLine ) &&
+  //     this.isIntersectOneTargetBorder( horizontalDectectingTargetLine )
+  //   ) {
+  //     points = [
+  //       currentSourceExtension,
+  //       potentialHorizon,
+  //       currentTargetExtension
+  //     ]
+  //   } else if (
+  //     this.isIntersectOneSourceBorder( verticalDectectingSourceLine ) &&
+  //     this.isIntersectOneTargetBorder( verticalDectectingTargetLine )
+  //   ) {
+  //     points = [
+  //       currentSourceExtension,
+  //       potentialVertical,
+  //       currentTargetExtension
+  //     ]
+  //   } else if (
+  //     ( this.notIntersectOneSourceBorder( horizontalDectectingSourceLine ) ||
+  //       this.notIntersectOneTargetBorder( horizontalDectectingTargetLine ) ) &&
+  //     ( this.notIntersectOneSourceBorder( verticalDectectingSourceLine ) ||
+  //       this.notIntersectOneTargetBorder( verticalDectectingTargetLine ) )
+  //   ) {
+
+  //     const sourceExtensionCorner = this.getSourceExtensionCorner(
+  //       this.currentSourceExtension
+  //     )
+  //     const targetExtensionCorner = this.getTargetExtensionCorner(
+  //       this.currentSourceExtension
+  //     )
+
+  //     let newSourceExtension: Point2D
+  //     let newTargetExtension: Point2D
+
+  //     const { sourceLeftExtension, sourceTopExtension, sourceRightExtension, sourceBottomExtension, totalExtensionLeft,
+  //       totalExtensionTop, totalExtensionRight, totalExtensionBottom} = this
+
+  //   if( isPointEqual( currentSourceExtension,  sourceLeftExtension ) ) {
+  //     newSourceExtension = {
+  //       x: totalExtensionLeft,
+  //       y: currentSourceExtension.y
+  //     }
+
+  //     newTargetExtension = {
+  //       x: totalExtensionRight,
+  //       y: currentTargetExtension.y
+  //     }
+  //   }
+
+  //   if( isPointEqual( currentSourceExtension,  sourceTopExtension ) ) {
+  //     newSourceExtension = {
+  //       x: currentSourceExtension.x,
+  //       y: totalExtensionTop
+  //     }
+
+  //     newTargetExtension = {
+  //       x: currentTargetExtension.x,
+  //       y: totalExtensionBottom
+  //     }
+  //   }
+
+  //   if( isPointEqual( currentSourceExtension,  sourceRightExtension ) ) {
+  //     newSourceExtension = {
+  //       x: totalExtensionRight,
+  //       y: currentSourceExtension.y
+  //     }
+
+  //     newTargetExtension = {
+  //       x: totalExtensionLeft,
+  //       y: currentTargetExtension.y
+  //     }
+  //   }
+
+  //   if( isPointEqual( currentSourceExtension,  sourceBottomExtension ) ) {
+  //     newSourceExtension = {
+  //       x: currentSourceExtension.x,
+  //       y: totalExtensionBottom
+  //     }
+
+  //     newTargetExtension = {
+  //       x: currentTargetExtension.x,
+  //       y: totalExtensionTop
+  //     }
+  //   }
+
+  //     points = [
+  //       newSourceExtension,
+  //       sourceExtensionCorner,
+  //       targetExtensionCorner,
+  //       newTargetExtension
+  //     ]
+  //   }
+
+  //   points = removeExtraPointsOnSameSegmentLine( [
+  //     sourcePoint,
+  //     ...points,
+  //     targetPoint
+  //   ] )
+
+  //   const res: LineTwoPoints[] = composeLineTwoPoints( points )
+
+  //   return res
+
+  //   function composeLineTwoPoints( points: Point2D[] ) {
+  //     let res: LineTwoPoints[] = []
+  //     points.map( compose )
+  //     return res
+
+  //     function compose( point: Point2D, index: number, points: Point2D[] ) {
+  //       const { length }: Point2D[] = points
+
+  //       if ( !isFirst( index ) ) {
+  //         const prev: Point2D = points[ index - 1 ]
+  //         res.push( [ prev, point ] )
+  //       }
+  //     }
+  //   }
+  // }
 
   /**
    * // Intersection
